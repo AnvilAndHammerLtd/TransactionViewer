@@ -5,14 +5,14 @@ executives who are always flying around the globe. They need a list of every pro
 trades with, and the sales of those products, which are made in different currencies.
 Your application should be composed of two screens:
 
-1. In the first one, your application should
+1) In the first one, your application should
 
 • give the users the choice of which product they want to see, and
 
 • show the count of transactions for that product.
 
 
-2. When the user selects a product, the application must show
+2) When the user selects a product, the application must show
 
 • each of the transactions related to that product,
 
