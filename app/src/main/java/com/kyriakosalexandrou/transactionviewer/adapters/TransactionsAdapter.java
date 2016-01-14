@@ -9,6 +9,7 @@ import android.widget.BaseAdapter;
 import android.widget.TextView;
 
 import com.kyriakosalexandrou.transactionviewer.R;
+import com.kyriakosalexandrou.transactionviewer.activities.MainActivity;
 import com.kyriakosalexandrou.transactionviewer.models.Product;
 import com.kyriakosalexandrou.transactionviewer.models.Transaction;
 
@@ -47,12 +48,16 @@ public class TransactionsAdapter extends BaseAdapter {
 
         TextView originalCurrency = (TextView) convertView.findViewById(R.id.transaction_original_currency);
         TextView originalValue = (TextView) convertView.findViewById(R.id.transaction_original_value);
-        TextView gbpValue = (TextView) convertView.findViewById(R.id.transaction_GBP_value);
+
+        TextView transactionConvertedCurrencyLabel = (TextView) convertView.findViewById(R.id.transaction_converted_currency);
+        TextView transactionConvertedCurrencyValue = (TextView) convertView.findViewById(R.id.transaction_converted_value);
 
 
         originalCurrency.setText(mTransactions.get(position).getCurrency());
         originalValue.setText(" " + mTransactions.get(position).getAmount());
-        gbpValue.setText(" " + mTransactions.get(position).getAmountInGBP());
+
+        transactionConvertedCurrencyLabel.setText(" " + MainActivity.CURRENCY_TO_CONVERT_TRANSACTIONS_TO);
+        transactionConvertedCurrencyValue.setText(" " + mTransactions.get(position).getAmountInConvertedCurrency());
 
         return convertView;
     }

@@ -35,13 +35,13 @@
         android:orientation="horizontal">
 
         <TextView
-            android:id="@+id/transaction_GBP_currency"
+            android:id="@+id/transaction_converted_currency"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="£" />
 
         <TextView
-            android:id="@+id/transaction_GBP_value"
+            android:id="@+id/transaction_converted_value"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             tools:text="20.15" />

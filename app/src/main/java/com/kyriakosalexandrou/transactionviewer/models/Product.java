@@ -7,8 +7,6 @@ import java.util.ArrayList;
  * Created by Kyriakos on 13/12/2015.
  */
 public class Product implements Serializable {
-//    private static final long serialVersionUID = -7060210544600464481L;
-
     private String mSKU;
     private ArrayList<Transaction> mTransactions = new ArrayList<>();
     private float mTotalAmount = 0;
@@ -25,12 +23,16 @@ public class Product implements Serializable {
         return mTransactions.size();
     }
 
-    public float getTotalAmountInGBP() {
+    public float getTotalAmount() {
         return mTotalAmount;
     }
 
-    public void addToTotalAmount(float add) {
-        mTotalAmount += add;
+    public void setTotalAmount(float amount) {
+        mTotalAmount = amount;
+    }
+
+    public void addTotalAmount(float amountToAdd) {
+        mTotalAmount += amountToAdd;
     }
 
     public Product(String mSKU, Transaction transaction) {

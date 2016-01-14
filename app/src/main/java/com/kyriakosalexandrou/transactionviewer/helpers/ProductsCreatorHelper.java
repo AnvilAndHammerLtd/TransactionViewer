@@ -15,11 +15,9 @@ public class ProductsCreatorHelper {
     public static String EXTRA_PRODUCT = "PRODUCT";
     private final static String TAG = ProductsCreatorHelper.class.getSimpleName();
     private ArrayList<Rate> mRates;
-    private String mCurrencyToConvertTransactionsTo;
 
-    public ProductsCreatorHelper(ArrayList<Rate> rates, String currencyToConvertTransactionsTo) {
+    public ProductsCreatorHelper(ArrayList<Rate> rates) {
         mRates = rates;
-        mCurrencyToConvertTransactionsTo = currencyToConvertTransactionsTo;
     }
 
     public ArrayList<Product> createProducts(ArrayList<Transaction> transactions) {
@@ -59,70 +57,70 @@ public class ProductsCreatorHelper {
         return wasProductUpdated;
     }
 
-    public void calculateProductsTransactionsTotalAmount(Product product) {
-        float amount;
+    public float calculateProductTransactionsTotalAmount(ArrayList<Transaction> transactions, String currencyToConvertAllTransactionsTo) {
+        float amount = 0;
         String currentTransactionCurrency;
         float currentTransactionAmount;
 
-        for (Transaction transaction : product.getTransactions()) {
+        for (int i=0; i<transactions.size(); i++) {
+            Transaction transaction = transactions.get(i);
+
             currentTransactionAmount = Float.parseFloat(transaction.getAmount());
             currentTransactionCurrency = transaction.getCurrency();
 
-            amount = findFromSomethingToGBP(
+            amount += findFromSomethingToTheEndCurrency(
                     transaction,
                     currentTransactionAmount,
                     currentTransactionCurrency,
-                    currentTransactionCurrency
+                    currentTransactionCurrency,
+                    currencyToConvertAllTransactionsTo
+
             );
-            product.addToTotalAmount(amount);
         }
 
-        Log.v(TAG, "**********************");
-        Log.v(TAG, "Product SKU: " + product.getSKU());
-        Log.v(TAG, "Total transactions: " + product.getTotalTransactions());
-        Log.v(TAG, "Total transactions amount in " + mCurrencyToConvertTransactionsTo + ": " + product.getTotalAmountInGBP());
-        Log.v(TAG, "**********************");
+        return amount;
     }
 
-    private float findFromSomethingToGBP(Transaction currentTransaction, Float amount,
-                                         String currentTransacionCurrency, String startCurrency) {
-        boolean foundFromSomethingToGBP = false;
+    private float findFromSomethingToTheEndCurrency(Transaction currentTransaction, Float amount,
+                                                    String currentTransactionCurrency, String startCurrency, String endCurrency) {
+        boolean foundFromSomethingToEndCurrency = false;
         Rate rate;
 
         for (int i = 0; i < mRates.size(); i++) {
             rate = mRates.get(i);
 
-            // check if the current currency has a rate conversion to our FINAL_CURRENCY
-            if (currentTransacionCurrency.equals(rate.getFrom())
-                    && mCurrencyToConvertTransactionsTo.equals(rate.getTo())) {
+            // check if the current currency has a rate conversion to our endCurrency
+            if (currentTransactionCurrency.equals(rate.getFrom())
+                    && endCurrency.equals(rate.getTo())) {
                 amount *= Float.parseFloat(rate.getRate());
-                currentTransaction.setAmountInGBP(amount);
-                foundFromSomethingToGBP = true;
+                currentTransaction.setAmountInConvertedCurrency(amount);
+                foundFromSomethingToEndCurrency = true;
             }
         }
 
-        if (!foundFromSomethingToGBP) {
+        if (!foundFromSomethingToEndCurrency) {
             findFromSomethingToSomething(
                     currentTransaction, amount,
-                    currentTransacionCurrency, startCurrency);
+                    currentTransactionCurrency, startCurrency,
+                    endCurrency);
         }
 
         return amount;
     }
 
     private void findFromSomethingToSomething(Transaction currentTransaction, Float amount,
-                                              String currentTransacionCurrency, String startCurrency) {
+                                              String currentTransactionCurrency, String startCurrency, String endCurrency) {
         Rate rate;
 
         for (int i = 0; i < mRates.size(); i++) {
             rate = mRates.get(i);
 
             //found from our current currency to something else other than our startCurrency
-            if (rate.getFrom().equals(currentTransacionCurrency)
+            if (rate.getFrom().equals(currentTransactionCurrency)
                     && !rate.getTo().equals(startCurrency)) {
                 amount *= Float.parseFloat(rate.getRate());
                 //check again if this rate currency has a conversion to our FINAL_CURRENCY
-                findFromSomethingToGBP(currentTransaction, amount, rate.getTo(), startCurrency);
+                findFromSomethingToTheEndCurrency(currentTransaction, amount, rate.getTo(), startCurrency, endCurrency);
                 break;
             }
         }

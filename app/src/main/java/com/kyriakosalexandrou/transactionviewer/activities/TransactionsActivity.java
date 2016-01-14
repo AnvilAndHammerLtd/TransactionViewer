@@ -25,7 +25,7 @@ public class TransactionsActivity extends Activity {
         Product product = (Product) intent.getSerializableExtra(ProductsCreatorHelper.EXTRA_PRODUCT);
 
         TextView totalAmount = (TextView) findViewById(R.id.totalAmount);
-        totalAmount.setText("Total: £" + product.getTotalAmountInGBP() + "");
+        totalAmount.setText("Total: " + MainActivity.CURRENCY_TO_CONVERT_TRANSACTIONS_TO + " " + product.getTotalAmount());
 
         TransactionsAdapter transactionsAdapter = new TransactionsAdapter(this, product.getTransactions());
         ListView transactionsList = (ListView) findViewById(R.id.transactionsList);

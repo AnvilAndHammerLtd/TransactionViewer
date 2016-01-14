@@ -20,14 +20,14 @@ public class Transaction implements Serializable{
     @SerializedName("currency")
     @Expose
     private String currency;
-    private float mAmountInGBP;
+    private float mAmountInConvertedCurrency;
 
-    public float getAmountInGBP() {
-        return mAmountInGBP;
+    public float getAmountInConvertedCurrency() {
+        return mAmountInConvertedCurrency;
     }
 
-    public void setAmountInGBP(float amountInGBP) {
-        mAmountInGBP = amountInGBP;
+    public void setAmountInConvertedCurrency(float amount) {
+        mAmountInConvertedCurrency = amount;
     }
 
     /**

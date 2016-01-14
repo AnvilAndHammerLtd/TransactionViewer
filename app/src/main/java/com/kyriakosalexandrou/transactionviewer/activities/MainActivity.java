@@ -3,6 +3,7 @@ package com.kyriakosalexandrou.transactionviewer.activities;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ListView;
@@ -19,9 +20,10 @@ import com.kyriakosalexandrou.transactionviewer.models.Transaction;
 import java.util.ArrayList;
 
 public class MainActivity extends AppCompatActivity implements CommonActivityUiLogicHelper {
+    private final static String TAG = MainActivity.class.getSimpleName();
 
     private ListView mProductsListView;
-    private String CURRENCY_TO_CONVERT_TRANSACTIONS_TO = "GBP";
+    public final static String CURRENCY_TO_CONVERT_TRANSACTIONS_TO = "GBP";
 
     private ArrayList<Rate> mRates;
     private ArrayList<Transaction> mTransactions;
@@ -36,11 +38,19 @@ public class MainActivity extends AppCompatActivity implements CommonActivityUiL
         mRates = JsonUtil.createRates(this);
         mTransactions = JsonUtil.createTransactions(this);
 
-        ProductsCreatorHelper productsCreatorHelper = new ProductsCreatorHelper(mRates, CURRENCY_TO_CONVERT_TRANSACTIONS_TO);
+        ProductsCreatorHelper productsCreatorHelper = new ProductsCreatorHelper(mRates);
         mProducts = productsCreatorHelper.createProducts(mTransactions);
+        float productTransactionsTotalAmount;
 
         for (Product product : mProducts) {
-            productsCreatorHelper.calculateProductsTransactionsTotalAmount(product);
+            productTransactionsTotalAmount = productsCreatorHelper.calculateProductTransactionsTotalAmount(product.getTransactions(), CURRENCY_TO_CONVERT_TRANSACTIONS_TO);
+            product.setTotalAmount(productTransactionsTotalAmount);
+
+            Log.v(TAG, "**********************");
+            Log.v(TAG, "Product SKU: " + product.getSKU());
+            Log.v(TAG, "Total transactions: " + product.getTotalTransactions());
+            Log.v(TAG, "Total transactions amount in " + CURRENCY_TO_CONVERT_TRANSACTIONS_TO + ": " + product.getTotalAmount());
+            Log.v(TAG, "**********************");
         }
 
         setAdapters();
