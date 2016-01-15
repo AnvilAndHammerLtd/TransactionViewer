@@ -1,5 +1,7 @@
 # TransactionViewer
 
+NOTE: This is work in progress
+
 Your manager has asked you to design and implement a mobile application to help the firm
 executives who are always flying around the globe. They need a list of every product the company
 trades with, and the sales of those products, which are made in different currencies.
