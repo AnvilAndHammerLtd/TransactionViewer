@@ -68,20 +68,20 @@ public class ProductsCreatorHelper {
             currentTransactionAmount = Float.parseFloat(transaction.getAmount());
             currentTransactionCurrency = transaction.getCurrency();
 
-            amount += findFromSomethingToTheEndCurrency(
+            findFromSomethingToTheEndCurrency(
                     transaction,
                     currentTransactionAmount,
                     currentTransactionCurrency,
                     currentTransactionCurrency,
                     currencyToConvertAllTransactionsTo
-
             );
+            amount += transaction.getAmountInConvertedCurrency();
         }
 
         return amount;
     }
 
-    private float findFromSomethingToTheEndCurrency(Transaction currentTransaction, Float amount,
+    private void findFromSomethingToTheEndCurrency(Transaction currentTransaction, Float amount,
                                                     String currentTransactionCurrency, String startCurrency, String endCurrency) {
         boolean foundFromSomethingToEndCurrency = false;
         Rate rate;
@@ -95,6 +95,7 @@ public class ProductsCreatorHelper {
                 amount *= Float.parseFloat(rate.getRate());
                 currentTransaction.setAmountInConvertedCurrency(amount);
                 foundFromSomethingToEndCurrency = true;
+                break;
             }
         }
 
@@ -104,8 +105,6 @@ public class ProductsCreatorHelper {
                     currentTransactionCurrency, startCurrency,
                     endCurrency);
         }
-
-        return amount;
     }
 
     private void findFromSomethingToSomething(Transaction currentTransaction, Float amount,
